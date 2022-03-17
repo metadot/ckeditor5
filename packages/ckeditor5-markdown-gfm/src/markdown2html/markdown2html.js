@@ -8,6 +8,7 @@
  */
 
 import { marked } from 'marked';
+import mojoCustomRenderer from './mojo-custom-renderer';
 
 // Overrides.
 marked.use( {
@@ -29,7 +30,8 @@ marked.use( {
 			// This results in a redundant soft break in the model when loaded into the editor, which
 			// is best prevented at this stage. See https://github.com/ckeditor/ckeditor5/issues/11124.
 			return Object.getPrototypeOf( this ).code.call( this, ...args ).replace( '\n</code>', '</code>' );
-		}
+		},
+		...mojoCustomRenderer
 	}
 } );
 
