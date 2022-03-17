@@ -9,6 +9,7 @@
 
 import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';
+import mojoTurndownBlankReplacementFn from './mojo-turndown-blank-replacement';
 
 // Override the original escape method by not escaping links.
 const originalEscape = TurndownService.prototype.escape;
@@ -55,7 +56,8 @@ TurndownService.prototype.escape = function( string ) {
 const turndownService = new TurndownService( {
 	codeBlockStyle: 'fenced',
 	hr: '---',
-	headingStyle: 'atx'
+	headingStyle: 'atx',
+	blankReplacement: mojoTurndownBlankReplacementFn
 } );
 
 turndownService.use( [
