@@ -33,6 +33,7 @@ import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices'
 import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown';
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
+import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -64,7 +65,8 @@ ClassicEditor.builtinPlugins = [
 	TextTransformation,
 	Markdown,
 	CodeBlock,
-	SourceEditing
+	SourceEditing,
+	HorizontalLine
 ];
 
 // Editor configuration.
@@ -88,6 +90,7 @@ ClassicEditor.defaultConfig = {
 			'mediaEmbed',
 			'undo',
 			'redo',
+			'horizontalLine',
 			'codeBlock',
 			'sourceEditing'
 		]
