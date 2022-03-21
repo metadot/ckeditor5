@@ -8,15 +8,15 @@ function youtube_video(id) {
 
 function process_custom_tags(text) {
 	// mojo#123
-	if (new RegExp(/(mojo\#)(\d+)/).exec(text)) {
-		const id = new RegExp(/(mojo\#)(\d+)/).exec(text)[2];
-		return mojo_ticket_link(id)
-	} else if (new RegExp(/(ticket\#)(\d+)/).exec(text)) {
-		const id = new RegExp(/(ticket\#)(\d+)/).exec(text)[2];
-		return mojo_ticket_link(id);
+	if (new RegExp(/(mojo\#)(\w+)/).exec(text)) {
+		const id = new RegExp(/(mojo\#)(\w+)/).exec(text)[2];
+		return text.replace(/(mojo\#)(\w+)/,mojo_ticket_link(id))
+	} else if (new RegExp(/(ticket\#)(\w+)/).exec(text)) {
+		const id = new RegExp(/(ticket\#)(\w+)/).exec(text)[2];
+		return text.replace(/(ticket\#)(\w+)/,mojo_ticket_link(id));
 	} else if (new RegExp(/(\[youtube-video )(.+)(\])/).exec(text)) {
 		const resource_id = new RegExp(/(\[youtube-video )(.+)(\])/).exec(text)[2];
-		return youtube_video(resource_id);
+		return text.replace(/(\[youtube-video )(.+)(\])/, youtube_video(resource_id));
 	} else {
 		return text;
 	}
@@ -24,10 +24,6 @@ function process_custom_tags(text) {
 
 export default {
 	paragraph(text, level) {
-		return process_custom_tags(text);
-	},
-	heading(text, level) {
-		level = level + 1;
-		return `<h${level}>${text}</h${level}>`;
+		return `<p>${process_custom_tags(text).trim()}</p>`;
 	}
 }
