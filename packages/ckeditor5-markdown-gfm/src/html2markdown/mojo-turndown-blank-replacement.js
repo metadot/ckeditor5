@@ -42,12 +42,19 @@ function _getId(url, PATTERNS) {
 }
 
 function _extractUrl(params) {
-	const url = new RegExp(
+	console.log('params', params);
+	let url = new RegExp(
 		/(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
-	).exec(params)[0];
-	// For now only supports Youtube
-	const id = _getId(url, YOUTUBE_PATTERNS);
-	return `[youtube-video ${id}]`;
+	).exec(params)
+
+	if (url) {
+		url = url[0];
+		// For now only supports Youtube
+		const id = _getId(url, YOUTUBE_PATTERNS);
+		return `[youtube-video ${id}]`;
+	} else {
+		return '';
+	}
 };
 
 /**
@@ -57,7 +64,7 @@ function _extractUrl(params) {
  * Will become [youtube-video 0A1b3T90dsc]
  *
  */
-export default function mojoTurndownBlankReplacementFn( content, node ) {
+export default function mojoTurndownBlankReplacementFn(content, node) {
 	return node.isBlock && !node.matches("figure")
 		? "\n\n"
 		: _extractUrl(node.outerHTML)
