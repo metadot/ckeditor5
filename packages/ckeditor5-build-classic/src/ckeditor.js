@@ -34,6 +34,7 @@ import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown';
 import CodeBlock from '@ckeditor/ckeditor5-code-block/src/codeblock';
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
 import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
+import Code from '@ckeditor/ckeditor5-basic-styles/src/code'
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -66,7 +67,8 @@ ClassicEditor.builtinPlugins = [
 	Markdown,
 	CodeBlock,
 	SourceEditing,
-	HorizontalLine
+	HorizontalLine,
+	Code
 ];
 
 // Editor configuration.
@@ -90,6 +92,7 @@ ClassicEditor.defaultConfig = {
 			'mediaEmbed',
 			'undo',
 			'redo',
+			'code',
 			'horizontalLine',
 			'codeBlock',
 			'sourceEditing'
