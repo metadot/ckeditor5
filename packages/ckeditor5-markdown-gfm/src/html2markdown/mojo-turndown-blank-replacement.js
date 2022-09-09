@@ -42,7 +42,6 @@ function _getId(url, PATTERNS) {
 }
 
 function _extractUrl(params) {
-	console.log('params', params);
 	let url = new RegExp(
 		/(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/
 	).exec(params)
