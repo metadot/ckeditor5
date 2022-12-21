@@ -9,7 +9,7 @@
 
 import Node from './node';
 
-import CKEditorError from '@ckeditor/ckeditor5-utils/src/ckeditorerror';
+import { CKEditorError, spliceArray } from '@ckeditor/ckeditor5-utils';
 
 /**
  * Provides an interface to operate on a list of {@link module:engine/model/node~Node nodes}. `NodeList` is used internally
@@ -17,7 +17,7 @@ import CKEditorError from '@ckeditor/ckeditor5-utils/src/ckeditorerror';
  * or {@link module:engine/model/documentfragment~DocumentFragment DocumentFragment}.
  */
 export default class NodeList implements Iterable<Node> {
-	private readonly _nodes: Node[];
+	private _nodes: Array<Node>;
 
 	/**
 	 * Creates an empty node list.
@@ -194,7 +194,7 @@ export default class NodeList implements Iterable<Node> {
 			}
 		}
 
-		this._nodes.splice( index, 0, ...nodes );
+		this._nodes = spliceArray<Node>( this._nodes, Array.from( nodes ), index, 0 );
 	}
 
 	/**
@@ -206,7 +206,7 @@ export default class NodeList implements Iterable<Node> {
 	 * @param {Number} [howMany=1] Number of nodes to remove.
 	 * @returns {Array.<module:engine/model/node~Node>} Array containing removed nodes.
 	 */
-	public _removeNodes( indexStart: number, howMany: number = 1 ): Node[] {
+	public _removeNodes( indexStart: number, howMany: number = 1 ): Array<Node> {
 		return this._nodes.splice( indexStart, howMany );
 	}
 

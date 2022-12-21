@@ -49,7 +49,7 @@ describe( 'SpecialCharacters', () => {
 				} )
 				.then( newEditor => {
 					editor = newEditor;
-					command = editor.commands.get( 'input' );
+					command = editor.commands.get( 'insertText' );
 				} );
 		} );
 
@@ -64,10 +64,14 @@ describe( 'SpecialCharacters', () => {
 
 			beforeEach( () => {
 				dropdown = editor.ui.componentFactory.create( 'specialCharacters' );
+				dropdown.render();
+				document.body.appendChild( dropdown.element );
+
 				dropdown.isOpen = true; // Dropdown is lazy loaded, so needs to be open to be verified (#6175).
 			} );
 
 			afterEach( () => {
+				dropdown.element.remove();
 				dropdown.destroy();
 			} );
 
@@ -116,7 +120,7 @@ describe( 'SpecialCharacters', () => {
 
 				sinon.assert.calledOnce( executeSpy );
 				sinon.assert.calledOnce( focusSpy );
-				sinon.assert.calledWithExactly( executeSpy.firstCall, 'input', {
+				sinon.assert.calledWithExactly( executeSpy.firstCall, 'insertText', {
 					text: '≤'
 				} );
 			} );
@@ -147,7 +151,7 @@ describe( 'SpecialCharacters', () => {
 					expect( grid.tiles.get( 0 ).label ).to.equal( '<' );
 					navigation.groupDropdownView.fire( new EventInfo( { label: 'Arrows' }, 'execute' ) );
 
-					expect( grid.tiles.get( 0 ).label ).to.equal( '⇐' );
+					expect( grid.tiles.get( 0 ).label ).to.equal( '←' );
 				} );
 			} );
 
@@ -171,6 +175,17 @@ describe( 'SpecialCharacters', () => {
 					const tile = grid.tiles.get( 0 );
 
 					tile.fire( 'mouseover' );
+
+					expect( tile.label ).to.equal( '<' );
+					expect( characterInfo.character ).to.equal( '<' );
+					expect( characterInfo.name ).to.equal( 'Less-than sign' );
+					expect( characterInfo.code ).to.equal( 'U+003c' );
+				} );
+
+				it( 'is updated when the tile fires #focus', () => {
+					const tile = grid.tiles.get( 0 );
+
+					tile.fire( 'focus' );
 
 					expect( tile.label ).to.equal( '<' );
 					expect( characterInfo.character ).to.equal( '<' );
