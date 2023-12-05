@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -20,6 +20,7 @@ describe( 'ListItemView', () => {
 		it( 'creates element from template', () => {
 			expect( view.element.classList.contains( 'ck' ) ).to.be.true;
 			expect( view.element.classList.contains( 'ck-list__item' ) ).to.be.true;
+			expect( view.element.role ).to.equal( 'presentation' );
 		} );
 
 		it( 'creates view#children collection', () => {
@@ -52,6 +53,12 @@ describe( 'ListItemView', () => {
 
 			view.focus();
 			sinon.assert.calledOnce( spy );
+		} );
+
+		it( 'should not throw if there is no child view', () => {
+			expect( () => {
+				view.focus();
+			} ).to.not.throw();
 		} );
 	} );
 } );

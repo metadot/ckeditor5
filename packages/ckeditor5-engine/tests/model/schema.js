@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -1653,6 +1653,16 @@ describe( 'Schema', () => {
 			'<paragraph></paragraph><paragraph>[]</paragraph>'
 		);
 
+		it( 'should return null for a position in graveyard even if there is a paragraph there', () => {
+			model.enqueueChange( { isUndoable: false }, writer => {
+				writer.insertElement( 'paragraph', model.document.graveyard, 0 );
+			} );
+
+			const range = schema.getNearestSelectionRange( model.createPositionFromPath( model.document.graveyard, [ 0 ] ) );
+
+			expect( range ).to.be.null;
+		} );
+
 		describe( 'in case of objects which do not allow text inside', () => {
 			test(
 				'should select nearest object (o[]o) - both',
@@ -2052,6 +2062,21 @@ describe( 'Schema', () => {
 				expect( getData( model, { withoutSelection: true } ) )
 					.to.equal( '<div><$text a="1">foo</$text>bar<$text a="1">biz</$text></div>' );
 			} );
+		} );
+
+		// Related to https://github.com/ckeditor/ckeditor5/issues/15246.
+		it( 'should filter out only non-allowed root attributes', () => {
+			schema.extend( '$root', { allowAttributes: 'allowed' } );
+
+			model.change( writer => {
+				writer.setAttribute( 'allowed', 'value', root );
+				writer.setAttribute( 'other', true, root );
+
+				schema.removeDisallowedAttributes( [ root ], writer );
+			} );
+
+			expect( root.getAttribute( 'allowed' ) ).to.equal( 'value' );
+			expect( root.getAttribute( 'other' ) ).to.be.undefined;
 		} );
 	} );
 

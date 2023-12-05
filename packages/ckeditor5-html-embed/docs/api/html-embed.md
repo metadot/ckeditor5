@@ -2,11 +2,11 @@
 category: api-reference
 ---
 
-# HTML embed feature for CKEditor 5
+# HTML embed feature for CKEditor&nbsp;5
 
 [![npm version](https://badge.fury.io/js/%40ckeditor%2Fckeditor5-html-embed.svg)](https://www.npmjs.com/package/@ckeditor/ckeditor5-html-embed)
 
-This package implements the HTML embed feature for CKEditor 5.
+This package implements the HTML embed feature for CKEditor&nbsp;5.
 
 ## Demo
 
@@ -24,7 +24,7 @@ npm install --save @ckeditor/ckeditor5-html-embed
 
 ## Contribute
 
-The source code of this package is available on GitHub in https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-html-embed.
+The source code of this package is available on GitHub in [https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-html-embed](https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-html-embed).
 
 ## External links
 

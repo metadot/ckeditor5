@@ -1,5 +1,6 @@
 ---
 category: examples-builds
+meta-title: Inline editor build example | CKEditor 5 Documentation
 order: 20
 toc: false
 classes: main__content--no-toc
@@ -22,13 +23,21 @@ Check out the {@link installation/getting-started/predefined-builds#installation
 
 ```js
 
-import InlineEditor from '@ckeditor/ckeditor5-build-inline/src/ckeditor';
+import InlineEditor from '@ckeditor/ckeditor5-build-inline';
 
 const inlineInjectElements = document.querySelectorAll( '#snippet-inline-editor [data-inline-inject]' );
 
 Array.from( inlineInjectElements ).forEach( inlineElement => {
 	const config = {
-		toolbar: {},
+		toolbar: {
+			items: [
+				'undo', 'redo',
+				'|', 'heading',
+				'|', 'bold', 'italic',
+				'|', 'link', 'uploadImage', 'insertTable', 'mediaEmbed',
+				'|', 'bulletedList', 'numberedList', 'outdent', 'indent'
+			]
+		},
 		cloudServices: {
 			// All predefined builds include the Easy Image feature.
 			// Provide correct configuration values to use it.

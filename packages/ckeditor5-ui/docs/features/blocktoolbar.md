@@ -1,27 +1,40 @@
 ---
 title: Block toolbar
+meta-title: Block toolbar | CKEditor 5 Documentation
 category: features-toolbar
 order: 20
 ---
 
-The block toolbar plugin provides an additional [configurable](#configuration) toolbar on the left-hand side of the content area (the gutter). The toolbar is represented by a button with a pilcrow (or a paragraph mark &mdash; &#182;). It is positioned next to the block element that the selection is anchored to (e.g. a paragraph), following the caret as the user edits the content and navigates the document.
-
-The block toolbar comes in handy when the main editor toolbar cannot be accessed. It complements the {@link installation/getting-started/predefined-builds#balloon-editor Balloon editor} when it falls short, for example when some content must be inserted (like an image) but the selection is collapsed, leaving the user unable to access the toolbar. You can read more about it in the {@link installation/getting-started/predefined-builds#balloon-block-editor balloon block editor overview}.
+The block toolbar plugin provides an additional [configurable](#configuration) toolbar on the left-hand side of the content area. The block toolbar comes in handy when you cannot access the main editor toolbar.
 
 ## Demo
 
 <info-box hint>
-	Move the caret around the content with the balloon editor below to see the block toolbar button following the selection. Click the button (&#182;) to use the toolbar, for example, to create a header or insert an image. See the {@link examples/builds/balloon-block-editor balloon block editor example} page, too.
+	In the editor below, move the caret around the content. You will see that the block toolbar button {@icon @ckeditor/ckeditor5-core/theme/icons/drag-indicator.svg drag indicator}  is following your selection. Click the button to show the toolbar.
 </info-box>
 
 {@snippet features/blocktoolbar}
+
+<info-box info>
+	This demo only presents a limited set of features. Visit the {@link examples/builds/full-featured-editor feature-rich editor example} to see more in action.
+</info-box>
+
+## Additional feature information
+
+To access the block toolbar, you need to click the button with braille pattern dots icon {@icon @ckeditor/ckeditor5-core/theme/icons/drag-indicator.svg drag indicator}  on the left-hand side of the content area (the gutter). The button appears next to the selected block element (e.g. a paragraph), following the caret as the user edits the content and navigates the document.
+
+The icon {@icon @ckeditor/ckeditor5-core/theme/icons/drag-indicator.svg drag indicator}  is also a handle to drag blocks of content around the editor. E.g. click on a heading in the demo above and drag it all the way down between the following paragraphs to see this functionality in action.
+
+The block toolbar complements the {@link installation/getting-started/predefined-builds#balloon-editor balloon editor} where it falls short, for example when you must insert some content (like an image), but the selection is collapsed, so you cannot access the toolbar. You can read more about it in the {@link installation/getting-started/predefined-builds#balloon-block-editor balloon block editor overview}.
+
+See the {@link examples/builds/balloon-block-editor balloon block editor example} page, too.
 
 ## Configuration
 
 The content of the toolbar can be defined using the {@link module:core/editor/editorconfig~EditorConfig#blockToolbar} configuration. See the [installation instructions](#installation) to learn more.
 
 <info-box hint>
-	Because the toolbar is always connected to the block of content, it works best with the features that modify entire blocks (e.g. create {@link features/headings headings}) or insert objects (e.g. {@link features/images-overview images} or {@link features/table tables}) rather than inline styles (e.g. {@link features/basic-styles bold or italic}).
+	Because the toolbar is always connected to the block of content, it works best with the features that modify entire blocks (e.g. create {@link features/headings headings}) or insert objects (e.g. {@link features/images-overview images} or {@link features/tables tables}) rather than inline styles (e.g. {@link features/basic-styles bold or italic}).
 </info-box>
 
 To adjust the position of the block toolbar button to match the styles of your website, use the CSS `transform` property:
@@ -40,6 +53,19 @@ If you plan to run the editor in a right–to–left (RTL) language, keep in min
 }
 ```
 
+Before the v40.0.0 release of CKEditor 5, the block toolbar used the pilcrow icon (¶) as a handle. This was changed to braille pattern dots icon {@icon @ckeditor/ckeditor5-core/theme/icons/drag-indicator.svg Drag indicator}  as a default. If you want to use a different icon, you can configure it easily, for example:
+
+```js
+	blockToolbar: {
+		items: [
+			'bold',
+			'italic',
+			'link'
+		],
+		icon: 'pilcrow' // or SVG.
+	},
+```
+
 ## Installation
 
 <info-box hint>
@@ -55,13 +81,13 @@ npm install --save @ckeditor/ckeditor5-ui
 Add the `BlockToolbar` to your plugin list and configure the feature using the `blockToolbar` property:
 
 ```js
-import BlockToolbar from '@ckeditor/ckeditor5-ui/src/toolbar/block/blocktoolbar';
-import HeadingButtonsUI from '@ckeditor/ckeditor5-heading/src/headingbuttonsui';
-import ParagraphButtonUI from '@ckeditor/ckeditor5-paragraph/src/paragraphbuttonui';
+import { BlockToolbar } from '@ckeditor/ckeditor5-ui';
+import { HeadingButtonsUI } from '@ckeditor/ckeditor5-heading';
+import { ParagraphButtonUI } from '@ckeditor/ckeditor5-paragraph';
 
 BalloonEditor
 	.create( document.querySelector( '#editor' ), {
-		plugins: [ BlockToolbar, ParagraphButtonUI, HeadingButtonsUI, ... ],
+		plugins: [ BlockToolbar, ParagraphButtonUI, HeadingButtonsUI, /* ... */ ],
 		blockToolbar: [
 			'paragraph', 'heading1', 'heading2', 'heading3',
 			'|',
@@ -69,22 +95,22 @@ BalloonEditor
 			'|',
 			'blockQuote', 'uploadImage'
 		],
-		toolbar: [ ... ]
+		toolbar: [ /* ... */ ]
 	} )
-	.then( ... )
-	.catch( ... );
+	.then( /* ... */ )
+	.catch( /* ... */ );
 ```
 
 You can also use the `shouldNotGroupWhenFull` option to prevent {@link module:core/editor/editorconfig~EditorConfig#toolbar automatic items grouping} in the block toolbar:
 
 ```js
-import BlockToolbar from '@ckeditor/ckeditor5-ui/src/toolbar/block/blocktoolbar';
-import HeadingButtonsUI from '@ckeditor/ckeditor5-heading/src/headingbuttonsui';
-import ParagraphButtonUI from '@ckeditor/ckeditor5-paragraph/src/paragraphbuttonui';
+import { BlockToolbar } from '@ckeditor/ckeditor5-ui';
+import { HeadingButtonsUI } from '@ckeditor/ckeditor5-heading';
+import { ParagraphButtonUI } from '@ckeditor/ckeditor5-paragraph';
 
 BalloonEditor
 	.create( document.querySelector( '#editor' ), {
-		plugins: [ BlockToolbar, ParagraphButtonUI, HeadingButtonsUI, ... ],
+		plugins: [ BlockToolbar, ParagraphButtonUI, HeadingButtonsUI, /* ... */ ],
 		blockToolbar: {
 			items: [
 				'paragraph', 'heading1', 'heading2', 'heading3',
@@ -95,16 +121,45 @@ BalloonEditor
 			],
 			shouldNotGroupWhenFull: true
 		},
-		toolbar: [ ... ]
+		toolbar: [ /* ... */ ]
 	} )
-	.then( ... )
-	.catch( ... );
+	.then( /* ... */ )
+	.catch( /* ... */ );
+```
+
+You can also change the current default toolbar icon `'dragIndicator'` {@icon @ckeditor/ckeditor5-core/theme/icons/drag-indicator.svg Drag indicator} by choosing predefined icon from {@link features/toolbar#changing-the-icon list} using option `icon` or by passing a `SVG` string:
+
+```js
+import { BlockToolbar } from '@ckeditor/ckeditor5-ui';
+import { HeadingButtonsUI } from '@ckeditor/ckeditor5-heading';
+import { ParagraphButtonUI } from '@ckeditor/ckeditor5-paragraph';
+
+BalloonEditor
+	.create( document.querySelector( '#editor' ), {
+		plugins: [ BlockToolbar, ParagraphButtonUI, HeadingButtonsUI, /* ... */ ],
+		blockToolbar: {
+			items: [
+				'paragraph', 'heading1', 'heading2', 'heading3',
+				'|',
+				'bulletedList', 'numberedList',
+				'|',
+				'blockQuote', 'uploadImage'
+			],
+			icon: 'pilcrow'
+			// or
+			// icon: '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">' +
+			//		'<path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg>'
+		},
+		toolbar: [ /* ... */ ]
+	} )
+	.then( /* ... */ )
+	.catch( /* ... */ );
 ```
 
 <info-box info>
-	Read more about {@link installation/getting-started/installing-plugins installing plugins}.
+	Read more about {@link installation/plugins/installing-plugins installing plugins}.
 </info-box>
 
 ## Contribute
 
-The source code of the feature is available on GitHub in https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-ui.
+The source code of the feature is available on GitHub at [https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-ui](https://github.com/ckeditor/ckeditor5/tree/master/packages/ckeditor5-ui).

@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -34,7 +34,7 @@ import TokenMock from '@ckeditor/ckeditor5-cloud-services/tests/_utils/tokenmock
 const CKBOX_API_URL = 'https://upload.example.com';
 
 describe( 'CKBoxEditing', () => {
-	let editor, model, view, originalCKBox;
+	let editor, model, view, originalCKBox, replaceImageSourceCommand;
 
 	testUtils.createSinonSandbox();
 
@@ -50,6 +50,7 @@ describe( 'CKBoxEditing', () => {
 			}
 		} );
 
+		replaceImageSourceCommand = editor.commands.get( 'replaceImageSource' );
 		model = editor.model;
 		view = editor.editing.view;
 	} );
@@ -226,11 +227,10 @@ describe( 'CKBoxEditing', () => {
 
 			expect( editor.config.get( 'ckbox' ) ).to.deep.equal( {
 				serviceOrigin: 'https://api.ckbox.io',
-				assetsOrigin: 'https://ckbox.cloud',
 				defaultUploadCategories: null,
 				ignoreDataId: false,
 				language: 'pl',
-				theme: 'default',
+				theme: 'lark',
 				tokenUrl: 'http://cs.example.com'
 			} );
 
@@ -248,11 +248,10 @@ describe( 'CKBoxEditing', () => {
 
 			expect( editor.config.get( 'ckbox' ) ).to.deep.equal( {
 				serviceOrigin: 'https://api.ckbox.io',
-				assetsOrigin: 'https://ckbox.cloud',
 				defaultUploadCategories: null,
 				ignoreDataId: false,
 				language: 'en',
-				theme: 'default',
+				theme: 'lark',
 				tokenUrl: 'http://cs.example.com'
 			} );
 
@@ -301,6 +300,19 @@ describe( 'CKBoxEditing', () => {
 			} );
 
 			expect( editor.config.get( 'ckbox' ).tokenUrl ).to.equal( 'bar' );
+
+			await editor.destroy();
+		} );
+
+		it( 'should set "theme" value based on `config.ckbox.theme`', async () => {
+			const editor = await createTestEditor( {
+				ckbox: {
+					theme: 'newTheme',
+					tokenUrl: 'http://cs.example.com'
+				}
+			} );
+
+			expect( editor.config.get( 'ckbox' ).theme ).to.equal( 'newTheme' );
 
 			await editor.destroy();
 		} );
@@ -2044,6 +2056,23 @@ describe( 'CKBoxEditing', () => {
 				);
 			} );
 		} );
+	} );
+
+	it( 'should remove ckboxImageId attribute on image replace', () => {
+		const schema = model.schema;
+		schema.extend( 'imageBlock', { allowAttributes: 'ckboxImageId' } );
+
+		setModelData( model, `[<imageBlock
+			ckboxImageId="id"
+		></imageBlock>]` );
+
+		const element = model.document.selection.getSelectedElement();
+
+		expect( element.getAttribute( 'ckboxImageId' ) ).to.equal( 'id' );
+
+		replaceImageSourceCommand.execute( { source: 'bar/foo.jpg' } );
+
+		expect( element.getAttribute( 'ckboxImageId' ) ).to.be.undefined;
 	} );
 } );
 

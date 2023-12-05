@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -7,24 +7,22 @@
  * @module utils/version
  */
 
-/* globals window, global */
-
 import CKEditorError from './ckeditorerror';
 
-const version = '35.4.0';
+const version = '40.1.0';
 
 export default version;
 
-/* istanbul ignore next */
-const windowOrGlobal = typeof window === 'object' ? window : global;
+// The second argument is not a month. It is `monthIndex` and starts from `0`.
+export const releaseDate = new Date( 2023, 10, 15 );
 
 declare global {
 	// eslint-disable-next-line no-var
 	var CKEDITOR_VERSION: string;
 }
 
-/* istanbul ignore next */
-if ( windowOrGlobal.CKEDITOR_VERSION ) {
+/* istanbul ignore next -- @preserve */
+if ( globalThis.CKEDITOR_VERSION ) {
 	/**
 	 * This error is thrown when due to a mistake in how CKEditor 5 was installed or initialized, some
 	 * of its modules were duplicated (evaluated and executed twice). Module duplication leads to inevitable runtime
@@ -48,7 +46,7 @@ if ( windowOrGlobal.CKEDITOR_VERSION ) {
 	 * that it contains all the necessary code from e.g. `@ckeditor/ckeditor5-engine` and `@ckeditor/ckeditor5-utils`.
 	 *
 	 * However, the `Highlight` plugin imports some of the modules from these packages, too. If you ask webpack to
-	 * build such a project, you will end up with the modules being included (and run) twice &mdash; first, because they are
+	 * build such a project, you will end up with the modules being included (and run) twice &ndash; first, because they are
 	 * included inside the build package, and second, because they are required by the `Highlight` plugin.
 	 *
 	 * Therefore, **you must never add plugins to an existing build** unless your plugin has no dependencies.
@@ -56,15 +54,15 @@ if ( windowOrGlobal.CKEDITOR_VERSION ) {
 	 * Adding plugins to a build is done by taking the source version of this build (so, before it was built with webpack)
 	 * and adding plugins there. In this situation, webpack will know that it only needs to load each plugin once.
 	 *
-	 * Read more in the {@glink installation/getting-started/installing-plugins "Installing plugins"} guide.
+	 * Read more in the {@glink installation/plugins/installing-plugins Installing plugins} guide.
 	 *
 	 * # Confused an editor build with an editor implementation
 	 *
 	 * This scenario is very similar to the previous one, but has a different origin.
 	 *
 	 * Let's assume that you wanted to use CKEditor 5 from source, as explained in the
-	 * {@glink installation/advanced/alternative-setups/integrating-from-source "Building from source"} section
-	 * or in the {@glink framework/guides/quick-start "Quick start"} guide of CKEditor 5 Framework.
+	 * {@glink installation/advanced/alternative-setups/integrating-from-source-webpack "Building from source"} section
+	 * or in the {@glink framework/quick-start "Quick start"} guide of CKEditor 5 Framework.
 	 *
 	 * The correct way to do so is to import an editor and plugins and run them together like this:
 	 *
@@ -133,7 +131,7 @@ if ( windowOrGlobal.CKEDITOR_VERSION ) {
 	 * asking the author of the third-party package to upgrade its depdendencies (or forking their project and doing this yourself).
 	 *
 	 * **Note:** All official CKEditor 5 packages (excluding integrations and `ckeditor5-dev-*` packages) are released in the
-	 * same major version. This is &mdash; in the `x.y.z`, the `x` is the same for all packages. This is the simplest way to check
+	 * same major version. This means that in the `x.y.z` version, the `x` is the same for all packages. This is the simplest way to check
 	 * whether you use packages coming from the same CKEditor 5 version. You can read more about versioning in the
 	 * {@glink updating/versioning-policy Versioning policy} guide.
 	 *
@@ -164,5 +162,5 @@ if ( windowOrGlobal.CKEDITOR_VERSION ) {
 		null
 	);
 } else {
-	windowOrGlobal.CKEDITOR_VERSION = version;
+	globalThis.CKEDITOR_VERSION = version;
 }

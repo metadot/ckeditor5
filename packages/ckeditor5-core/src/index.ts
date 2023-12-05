@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -7,21 +7,27 @@
  * @module core
  */
 
-export { default as Plugin, type PluginDependencies } from './plugin';
-export { default as Command } from './command';
+export { default as Plugin, type PluginDependencies, type PluginConstructor } from './plugin';
+export { default as Command, type CommandExecuteEvent } from './command';
 export { default as MultiCommand } from './multicommand';
-export { CommandsMap } from './commandcollection';
-export { PluginsMap } from './plugincollection';
+export type { CommandsMap } from './commandcollection';
+export type { PluginsMap, default as PluginCollection } from './plugincollection';
 
-export { default as Context } from './context';
-export { default as ContextPlugin } from './contextplugin';
+export { default as Context, type ContextConfig } from './context';
+export { default as ContextPlugin, type ContextPluginDependencies } from './contextplugin';
+export { type EditingKeystrokeCallback } from './editingkeystrokehandler';
 
-export { default as Editor, type EditorReadyEvent } from './editor/editor';
-export { default as EditorUI, type EditorUIReadyEvent, type EditorUIUpdateEvent } from './editor/editorui';
-export type { EditorConfig, ToolbarConfig, ToolbarConfigItem } from './editor/editorconfig';
+export { default as Editor, type EditorReadyEvent, type EditorDestroyEvent } from './editor/editor';
+export type {
+	EditorConfig,
+	LanguageConfig,
+	ToolbarConfig,
+	ToolbarConfigItem,
+	UiConfig
+} from './editor/editorconfig';
 
 export { default as attachToForm } from './editor/utils/attachtoform';
-export { default as DataApiMixin } from './editor/utils/dataapimixin';
+export { default as DataApiMixin, type DataApi } from './editor/utils/dataapimixin';
 export { default as ElementApiMixin, type ElementApi } from './editor/utils/elementapimixin';
 export { default as secureSourceElement } from './editor/utils/securesourceelement';
 
@@ -32,7 +38,10 @@ import caption from './../theme/icons/caption.svg';
 import check from './../theme/icons/check.svg';
 import cog from './../theme/icons/cog.svg';
 import eraser from './../theme/icons/eraser.svg';
+import history from './../theme/icons/history.svg';
 import lowVision from './../theme/icons/low-vision.svg';
+import textAlternative from './../theme/icons/text-alternative.svg';
+import loupe from './../theme/icons/loupe.svg';
 import image from './../theme/icons/image.svg';
 
 import alignBottom from './../theme/icons/align-bottom.svg';
@@ -60,6 +69,7 @@ import pencil from './../theme/icons/pencil.svg';
 import pilcrow from './../theme/icons/pilcrow.svg';
 import quote from './../theme/icons/quote.svg';
 import threeVerticalDots from './../theme/icons/three-vertical-dots.svg';
+import dragIndicator from './../theme/icons/drag-indicator.svg';
 
 import bold from './../theme/icons/bold.svg';
 import paragraph from './../theme/icons/paragraph.svg';
@@ -74,8 +84,11 @@ export const icons = {
 	check,
 	cog,
 	eraser,
+	history,
 	image,
 	lowVision,
+	textAlternative,
+	loupe,
 	importExport,
 	paragraph,
 	plus,
@@ -105,5 +118,8 @@ export const icons = {
 	pencil,
 	pilcrow,
 	quote,
-	threeVerticalDots
+	threeVerticalDots,
+	dragIndicator
 };
+
+import './augmentation';

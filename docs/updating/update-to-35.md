@@ -1,23 +1,24 @@
 ---
 category: update-guides
+meta-title: Update to version 35.x | CKEditor 5 Documentation
 menu-title: Update to v35.x
 order: 89
 modified_at: 2022-10-05
 ---
 
-# Update to CKEditor 5 v35.x
+# Update to CKEditor&nbsp;5 v35.x
 
 <info-box>
-	When updating your CKEditor 5 installation, make sure **all the packages are the same version** to avoid errors.
+	When updating your CKEditor&nbsp;5 installation, make sure **all the packages are the same version** to avoid errors.
 
 	For custom builds, you may try removing the `package-lock.json` or `yarn.lock` files (if applicable) and reinstalling all packages before rebuilding the editor. For best results, make sure you use the most recent package versions.
 </info-box>
 
-## Update to CKEditor 5 v35.2.0
+## Update to CKEditor&nbsp;5 v35.2.0
 
-For the entire list of changes introduced in version 35.2.0, see the [changelog for CKEditor 5 v34.0.0](https://github.com/ckeditor/ckeditor5/blob/stable/CHANGELOG.md#3520-2022-10-04).
+For the entire list of changes introduced in version 35.2.0, see the [release notes for CKEditor&nbsp;5 v35.2.0](https://github.com/ckeditor/ckeditor5/releases/tag/v35.2.0).
 
-Listed below are the most important changes that require your attention when upgrading to CKEditor 5 v35.2.0.
+Listed below are the most important changes that require your attention when upgrading to CKEditor&nbsp;5 v35.2.0.
 
 ### Introducing external comments
 
@@ -90,20 +91,20 @@ Among other changes, a few icons have been moved around the project. Please obse
 
 The rest of the import path remained unchanged (`/theme/icons/`).
 
-## Update to CKEditor 5 v35.1.0
+## Update to CKEditor&nbsp;5 v35.1.0
 
-For the entire list of changes introduced in version 35.1.0, see the [changelog for CKEditor 5 v35.1.0](https://github.com/ckeditor/ckeditor5/blob/stable/CHANGELOG.md#3510-2022-08-29).
+For the entire list of changes introduced in version 35.1.0, see the [release notes for CKEditor&nbsp;5 v35.1.0](https://github.com/ckeditor/ckeditor5/releases/tag/v35.1.0).
 
-Listed below are the most important changes that require your attention when upgrading to CKEditor 5 v35.1.0.
+Listed below are the most important changes that require your attention when upgrading to CKEditor&nbsp;5 v35.1.0.
 
 ### Changes to API providing the accessible navigation between editing roots and toolbars on <kbd>Alt</kbd>+<kbd>F10</kbd> and <kbd>Esc</kbd> keystrokes
 
 <info-box>
-	This information applies only to integrators who develop their own {@link framework/guides/custom-editor-creator editor creators} from scratch by using the {@link module:core/editor/editor~Editor} and {@link module:core/editor/editorui~EditorUI} classes as building blocks.
+	This information applies only to integrators who develop their own editor creators from scratch by using the {@link module:core/editor/editor~Editor} and {@link module:ui/editorui/editorui~EditorUI} classes as building blocks.
 </info-box>
 
-* The `enableToolbarKeyboardFocus()` helper that allowed the navigation has been removed. To bring this functionality back, use the {@link module:core/editor/editorui~EditorUI#addToolbar} method instead.
-* Also, please note that editable elements are now automatically added to the {@link module:core/editor/editorui~EditorUI#focusTracker main focus tracker} and should not be added individually.
+* The `enableToolbarKeyboardFocus()` helper that allowed the navigation has been removed. To bring this functionality back, use the {@link module:ui/editorui/editorui~EditorUI#addToolbar} method instead.
+* Also, please note that editable elements are now automatically added to the {@link module:utils/focustracker~FocusTracker main focus tracker} and should not be added individually.
 
 **Before**:
 
@@ -139,6 +140,7 @@ export default class MyEditorUI extends EditorUI {
 
 ```js
 import { EditorUI } from 'ckeditor5/src/core';
+// Or `import { EditorUI } from 'ckeditor5/src/ui';` if you update to v36.x;
 
 export default class MyEditorUI extends EditorUI {
 	// ...
@@ -208,7 +210,7 @@ Keep in mind that you do not need to worry about showing and hiding your custom 
 
 In this release, several changes were made to improve the accessibility and overall contrast of the UI. Since we understand that some integrations may prefer the previous look of the editor, we prepared a CSS snippet you can use to bring it back.
 
-For the best results, make sure the custom properties listed below are set after the main editor style sheets. For more information, please check out the {@link framework/guides/theme-customization theme customization guide}.
+For the best results, make sure the custom properties listed below are set after the main editor style sheets. For more information, please check out the {@link framework/theme-customization theme customization guide}.
 
 ```css
 :root {
@@ -254,15 +256,15 @@ The static properties of `BalloonPanelView` have been renamed.
 
 The `BalloonPanelView.arrowVerticalOffset` static property is now `arrowHeightOffset` and `BalloonPanelView.arrowHorizontalOffset` is now `arrowSideOffset`.
 
-## Update to CKEditor 5 v35.0.0
+## Update to CKEditor&nbsp;5 v35.0.0
 
-For the entire list of changes introduced in version 35.0.0, see the [changelog for CKEditor 5 v35.0.0](https://github.com/ckeditor/ckeditor5/blob/stable/CHANGELOG.md#3500-2022-07-29).
+For the entire list of changes introduced in version 35.0.0, see the [release notes for CKEditor&nbsp;5 v35.0.0](https://github.com/ckeditor/ckeditor5/releases/tag/v35.0.0).
 
-Listed below are the most important changes that require your attention when upgrading to CKEditor 5 v35.0.0.
+Listed below are the most important changes that require your attention when upgrading to CKEditor&nbsp;5 v35.0.0.
 
 ### The source element is not updated automatically after the editor destroy
 
-The last version of CKEditor 5 changes the default behavior of the source element after the editor is destroyed (when `editor.destroy()` is called). So far, the source element was updated with the output coming from `editor.getData()`. Now, the source element becomes empty after the editor is destroyed and it is not updated anymore.
+The last version of CKEditor&nbsp;5 changes the default behavior of the source element after the editor is destroyed (when `editor.destroy()` is called). So far, the source element was updated with the output coming from `editor.getData()`. Now, the source element becomes empty after the editor is destroyed and it is not updated anymore.
 
 However, this behavior is configurable and could be enabled with the {@link module:core/editor/editorconfig~EditorConfig#updateSourceElementOnDestroy `updateSourceElementOnDestroy`} configuration option:
 
@@ -281,7 +283,7 @@ ClassicEditor.create( sourceElement, {
 
 Due to the ongoing accessibility improvements the default behavior of the {@link module:ui/dropdown/dropdownview~DropdownView dropdown UI component} has been changed. From now on, by default, after choosing an option from a dropdown (either by mouse or keyboard), the focus will be automatically moved to the dropdown button.
 
-This default behavior of the dropdown component needs to be overridden in scenarios where the focus should be moved back to the editing area. An example of such a feature would be the "Heading" dropdown &mdash; choosing one of the options should result in the focus returning to the editing area instead of the button itself.
+This default behavior of the dropdown component needs to be overridden in scenarios where the focus should be moved back to the editing area. An example of such a feature would be the "Heading" dropdown &ndash; choosing one of the options should result in the focus returning to the editing area instead of the button itself.
 
 This behavior can be customized by using the listener on the dropdown's {@link module:ui/dropdown/dropdownview~DropdownView#event:execute `execute` event}, e.g.:
 
@@ -307,7 +309,7 @@ dropdownView.on( 'execute', () => {
 
 ### There is now a TypeScript code on GitHub (and how it affects your build)
 
-Starting from v35.0.0, the first of CKEditor 5 packages (namely: `@ckeditor/ckeditor5-utils`) is developed in TypeScript. This is the first step of [our migration to TypeScript](https://github.com/ckeditor/ckeditor5/issues/11704).
+Starting from v35.0.0, the first of CKEditor&nbsp;5 packages (namely: `@ckeditor/ckeditor5-utils`) is developed in TypeScript. This is the first step of [our migration to TypeScript](https://github.com/ckeditor/ckeditor5/issues/11704).
 
 #### Whom does it affect?
 
@@ -315,6 +317,6 @@ It affects you **only if** you use the [source code directly from git repository
 
 #### How does it affect you?
 
-For instance, if you happen to have a custom CKEditor 5 build that, for some reason, installs its dependencies from the git repository, you will need to update your webpack config to support the TypeScript code.
+For instance, if you happen to have a custom CKEditor&nbsp;5 build that, for some reason, installs its dependencies from the git repository, you will need to update your webpack config to support the TypeScript code.
 
 You can find the inspiration on how to change your configuration in [this commit](https://github.com/ckeditor/ckeditor5/commit/1dd4075983d97c61b1f668add764525c7fcf2a2d) (this one makes the discussed change in our builds).

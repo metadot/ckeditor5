@@ -1,20 +1,21 @@
 ---
 category: update-guides
+meta-title: Update to version 26.x | CKEditor 5 Documentation
 menu-title: Update to v26.x
 order: 98
 ---
 
 <info-box>
-	When updating your CKEditor 5 installation, make sure **all the packages are the same version** to avoid errors.
+	When updating your CKEditor&nbsp;5 installation, make sure **all the packages are the same version** to avoid errors.
 
 	For custom builds, you may try removing the `package-lock.json` or `yarn.lock` files (if applicable) and reinstalling all packages before rebuilding the editor. For best results, make sure you use the most recent package versions.
 </info-box>
 
-# Update to CKEditor 5 v26.0.0
+# Update to CKEditor&nbsp;5 v26.0.0
 
-For the entire list of changes introduced in version 26.0.0, see the [changelog for CKEditor 5 v26.0.0](https://github.com/ckeditor/ckeditor5/blob/master/CHANGELOG.md#2600-2021-03-01).
+For the entire list of changes introduced in version 26.0.0, see the [release notes for CKEditor&nbsp;5 v26.0.0](https://github.com/ckeditor/ckeditor5/releases/tag/v26.0.0).
 
-Listed below are the most important changes that require your attention when upgrading to CKEditor 5 v26.0.0.
+Listed below are the most important changes that require your attention when upgrading to CKEditor&nbsp;5 v26.0.0.
 
 ## Soft requirements
 
@@ -30,7 +31,7 @@ Therefore, when upgrading to version 26.0.0, you may stumble upon the {@link sup
 
 * Make sure to add {@link module:cloud-services/cloudservices~CloudServices `CloudServices`} to the editor plugins when using the `CloudServicesUploadAdapter` or `EasyImage` features.
 * Make sure to add {@link module:image/image~Image `Image`} and {@link module:image/imageupload~ImageUpload `ImageUpload`} to the editor plugins when using the `EasyImage` feature.
-* Make sure to add {@link module:adapter-ckfinder/uploadadapter~UploadAdapter `CKFinderUploadAdapter`}, {@link module:image/image~Image `Image`}, and {@link module:link/link~Link `Link`} features to the editor plugins when using the `CKFinder` feature.
+* Make sure to add {@link module:adapter-ckfinder/uploadadapter~CKFinderUploadAdapter `CKFinderUploadAdapter`}, {@link module:image/image~Image `Image`}, and {@link module:link/link~Link `Link`} features to the editor plugins when using the `CKFinder` feature.
 * Make sure to add {@link module:paragraph/paragraph~Paragraph `Paragraph`} to the editor plugins when using the `Title` feature.
 * Make sure to add {@link module:paragraph/paragraph~Paragraph `Paragraph`} to the editor plugins when using the `List` feature.
 * Make sure to add {@link module:image/image~Image `Image`} to the editor plugins when using the `LinkImage` feature.

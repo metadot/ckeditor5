@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -10,15 +10,51 @@ const upath = require( 'upath' );
 const fs = require( 'fs' );
 const minimatch = require( 'minimatch' );
 const webpack = require( 'webpack' );
-const { bundler, styles, tools } = require( '@ckeditor/ckeditor5-dev-utils' );
+const { bundler, loaders, tools } = require( '@ckeditor/ckeditor5-dev-utils' );
 const { CKEditorTranslationsPlugin } = require( '@ckeditor/ckeditor5-dev-translations' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const TerserPlugin = require( 'terser-webpack-plugin' );
-const glob = require( 'glob' );
+const { globSync } = require( 'glob' );
+const { addTypeScriptLoader } = require( './utils' );
 
 const DEFAULT_LANGUAGE = 'en';
 const MULTI_LANGUAGE = 'multi-language';
 const SNIPPETS_BUILD_CHUNK_SIZE = 50;
+
+const CKEDITOR5_ROOT_DIRECTORY = path.join( __dirname, '..', '..' );
+
+const CLOUD_SERVICES_CONFIG_PATH = path.join(
+	CKEDITOR5_ROOT_DIRECTORY, 'packages', 'ckeditor5-cloud-services', 'tests', '_utils', 'cloud-services-config'
+);
+
+const CKBOX_CONFIG_PATH = path.join(
+	CKEDITOR5_ROOT_DIRECTORY, 'packages', 'ckeditor5-ckbox', 'tests', '_utils', 'ckbox-config'
+);
+
+const ARTICLE_PLUGIN_PATH = path.join(
+	CKEDITOR5_ROOT_DIRECTORY, 'packages', 'ckeditor5-core', 'tests', '_utils', 'articlepluginset.js'
+);
+
+// CKEditor 5 snippets require files and modules from directories that are not published on npm.
+// While webpack does not complain when building docs locally, it reports errors related to importing non-existing files
+// when building the nightly/production docs.
+// Hence, we create a map that translates imports from the non-published directories to sources in the `packages/*` directory.
+const RESOLVE_ALIAS_MAP = {
+	// Import icons that are not a part of the package, but used only in the documentation.
+	'@ckeditor/ckeditor5-image/docs/assets': path.join( CKEDITOR5_ROOT_DIRECTORY, 'packages', 'ckeditor5-image', 'docs', 'assets' ),
+
+	// The `ArticlePluginSet` that loads a simple article plugins.
+	'@ckeditor/ckeditor5-core/tests/_utils/articlepluginset': ARTICLE_PLUGIN_PATH,
+	'@ckeditor/ckeditor5-core/tests/_utils/articlepluginset.js': ARTICLE_PLUGIN_PATH,
+
+	// Configuration for the Cloud Services used.
+	'@ckeditor/ckeditor5-cloud-services/tests/_utils/cloud-services-config': CLOUD_SERVICES_CONFIG_PATH,
+	'@ckeditor/ckeditor5-cloud-services/tests/_utils/cloud-services-config.js': CLOUD_SERVICES_CONFIG_PATH,
+
+	// Configuration for the CKBox service.
+	'@ckeditor/ckeditor5-ckbox/tests/_utils/ckbox-config.js': CKBOX_CONFIG_PATH,
+	'@ckeditor/ckeditor5-ckbox/tests/_utils/ckbox-config': CKBOX_CONFIG_PATH
+};
 
 /**
  * @param {Set.<Snippet>} snippets Snippet collection extracted from documentation files.
@@ -396,6 +432,8 @@ function getWebpackConfig( snippets, config ) {
 			filename: '[name]/snippet.js'
 		},
 
+		devtool: 'source-map',
+
 		optimization: {
 			minimizer: [
 				new TerserPlugin( {
@@ -428,6 +466,7 @@ function getWebpackConfig( snippets, config ) {
 				...getPackageDependenciesPaths(),
 				...getModuleResolvePaths()
 			],
+			alias: RESOLVE_ALIAS_MAP,
 			extensions: [ '.ts', '.js', '.json' ]
 		},
 
@@ -437,35 +476,17 @@ function getWebpackConfig( snippets, config ) {
 
 		module: {
 			rules: [
-				{
-					test: /\.svg$/,
-					use: [ 'raw-loader' ]
-				},
-				{
-					test: /\.css$/,
-					use: [
-						MiniCssExtractPlugin.loader,
-						'css-loader',
-						{
-							loader: 'postcss-loader',
-							options: {
-								postcssOptions: styles.getPostCssConfig( {
-									themeImporter: {
-										themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
-									},
-									minify: config.production
-								} )
-							}
-						}
-					]
-				},
-				{
-					test: /\.ts$/,
-					use: [ 'ts-loader' ]
-				}
+				loaders.getIconsLoader( { matchExtensionOnly: true } ),
+				loaders.getStylesLoader( {
+					themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' ),
+					minify: config.production,
+					extractToSeparateFile: true
+				} )
 			]
 		}
 	};
+
+	addTypeScriptLoader( webpackConfig, 'tsconfig.docs.json' );
 
 	for ( const snippetData of snippets ) {
 		if ( !webpackConfig.output.path ) {
@@ -526,8 +547,7 @@ function getPackageDependenciesPaths() {
 		absolute: true
 	};
 
-	return glob.sync( 'packages/*/node_modules', globOptions )
-		.concat( glob.sync( 'external/*/packages/*/node_modules', globOptions ) )
+	return globSync( [ 'packages/*/node_modules', 'external/*/packages/*/node_modules' ], globOptions )
 		.map( p => path.normalize( p ) );
 }
 
@@ -615,7 +635,7 @@ function splitSnippetsIntoChunks( snippets, chunkSize ) {
  * @returns {Object}
  */
 function getWebpackConfigForAssets( config ) {
-	return {
+	const webpackConfig = {
 		mode: config.production ? 'production' : 'development',
 
 		entry: {
@@ -666,20 +686,17 @@ function getWebpackConfigForAssets( config ) {
 
 		module: {
 			rules: [
-				{
-					test: /\.css$/,
-					use: [
-						MiniCssExtractPlugin.loader,
-						'css-loader'
-					]
-				},
-				{
-					test: /\.ts$/,
-					use: [ 'ts-loader' ]
-				}
+				loaders.getStylesLoader( {
+					skipPostCssLoader: true,
+					extractToSeparateFile: true
+				} )
 			]
 		}
 	};
+
+	addTypeScriptLoader( webpackConfig, 'tsconfig.docs.json' );
+
+	return webpackConfig;
 }
 
 /**

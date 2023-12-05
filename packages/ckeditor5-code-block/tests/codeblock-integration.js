@@ -1,7 +1,9 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
+
+/* global document */
 
 import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor';
 import Enter from '@ckeditor/ckeditor5-enter/src/enter';
@@ -10,6 +12,8 @@ import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataproces
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ImageInlineEditing from '@ckeditor/ckeditor5-image/src/image/imageinlineediting';
 import DocumentListEditing from '@ckeditor/ckeditor5-list/src/documentlist/documentlistediting';
+import DocumentListPropertiesEditing from '@ckeditor/ckeditor5-list/src/documentlistproperties/documentlistpropertiesediting';
+import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport';
 import { setData, getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model';
 
 import CodeBlockUI from '../src/codeblockui';
@@ -133,6 +137,17 @@ describe( 'CodeBlock - integration', () => {
 		it( 'should create a second code block with the same language as the first one', () => {
 			const dropdown = editor.ui.componentFactory.create( 'codeBlock' );
 			const codeBlock = dropdown.buttonView;
+
+			dropdown.render();
+			document.body.appendChild( dropdown.element );
+
+			// Make sure that toolbar view is not created before first dropdown open.
+			expect( dropdown.listView ).to.be.undefined;
+
+			// Trigger list view creation (lazy init).
+			dropdown.isOpen = true;
+			dropdown.isOpen = false;
+
 			const listView = dropdown.panelView.children.first;
 			const cSharpButton = listView.items.get( 2 ).children.first;
 
@@ -153,6 +168,8 @@ describe( 'CodeBlock - integration', () => {
 			// Clicking the button once again should create the code block with the C# language instead of the default (plaintext).
 			codeBlock.fire( 'execute' );
 			expect( getData( editor.model ) ).to.equal( '<codeBlock language="cs">[]</codeBlock>' );
+
+			dropdown.element.remove();
 		} );
 	} );
 
@@ -163,7 +180,14 @@ describe( 'CodeBlock - integration', () => {
 			beforeEach( async () => {
 				editor = await ClassicTestEditor
 					.create( '', {
-						plugins: [ CodeBlockEditing, DocumentListEditing, Enter, Paragraph ]
+						plugins: [
+							CodeBlockEditing, DocumentListEditing, DocumentListPropertiesEditing, Enter, Paragraph, GeneralHtmlSupport
+						],
+						htmlSupport: {
+							allow: [
+								{ name: /./, attributes: true, styles: true, classes: true }
+							]
+						}
 					} );
 
 				model = editor.model;
@@ -173,22 +197,26 @@ describe( 'CodeBlock - integration', () => {
 				await editor.destroy();
 			} );
 
-			it( 'should allow all attributes starting with list* in the schema', () => {
+			it( 'should allow all list attributes in the schema', () => {
 				setData( model, '<codeBlock language="plaintext">[]foo</codeBlock>' );
 
 				const codeBlock = model.document.getRoot().getChild( 0 );
 
 				expect( model.schema.checkAttribute( codeBlock, 'listItemId' ), 'listItemId' ).to.be.true;
 				expect( model.schema.checkAttribute( codeBlock, 'listType' ), 'listType' ).to.be.true;
-				expect( model.schema.checkAttribute( codeBlock, 'listStart' ), 'listStart' ).to.be.true;
-				expect( model.schema.checkAttribute( codeBlock, 'listFoo' ), 'listFoo' ).to.be.true;
+				expect( model.schema.checkAttribute( codeBlock, 'listStyle' ), 'listStyle' ).to.be.true;
+				expect( model.schema.checkAttribute( codeBlock, 'htmlLiAttributes' ), 'htmlLiAttributes' ).to.be.true;
+				expect( model.schema.checkAttribute( codeBlock, 'htmlUlAttributes' ), 'htmlUlAttributes' ).to.be.true;
+				expect( model.schema.checkAttribute( codeBlock, 'htmlOlAttributes' ), 'htmlOlAttributes' ).to.be.true;
 			} );
 
-			it( 'should disallow attributes that do not start with "list" in the schema but include the sequence', () => {
+			it( 'should disallow attributes that are not registered as list attributes', () => {
 				setData( model, '<codeBlock language="plaintext">[]foo</codeBlock>' );
 
 				const codeBlock = model.document.getRoot().getChild( 0 );
 
+				expect( model.schema.checkAttribute( codeBlock, 'listReversed' ), 'listReversed' ).to.be.false;
+				expect( model.schema.checkAttribute( codeBlock, 'listStart' ), 'listStart' ).to.be.false;
 				expect( model.schema.checkAttribute( codeBlock, 'list' ), 'list' ).to.be.false;
 				expect( model.schema.checkAttribute( codeBlock, 'fooList' ), 'fooList' ).to.be.false;
 				expect( model.schema.checkAttribute( codeBlock, 'alist' ), 'alist' ).to.be.false;

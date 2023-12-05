@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -22,6 +22,7 @@ import TableCellProperties from '@ckeditor/ckeditor5-table/src/tablecellproperti
 import TableColumnResize from '@ckeditor/ckeditor5-table/src/tablecolumnresize';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
 import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
+import { GeneralHtmlSupport } from '@ckeditor/ckeditor5-html-support';
 
 import PasteFromOffice from '../../src/pastefromoffice';
 
@@ -32,6 +33,7 @@ import { CS_CONFIG } from '@ckeditor/ckeditor5-cloud-services/tests/_utils/cloud
 const htmlDiv = document.querySelector( '#html' );
 const textDiv = document.querySelector( '#text' );
 const dataDiv = document.querySelector( '#data' );
+const rtfDiv = document.querySelector( '#rtf' );
 
 ClassicEditor
 	.create( document.querySelector( '#editor' ), {
@@ -40,6 +42,7 @@ ClassicEditor
 			ArticlePluginSet,
 			Strikethrough,
 			Underline,
+			GeneralHtmlSupport,
 			Table,
 			TableToolbar,
 			PageBreak,
@@ -60,7 +63,17 @@ ClassicEditor
 		table: {
 			contentToolbar: [ 'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties' ]
 		},
-		cloudServices: CS_CONFIG
+		cloudServices: CS_CONFIG,
+		htmlSupport: {
+			allow: [
+				{
+					name: /.*/,
+					attributes: true,
+					classes: true,
+					styles: true
+				}
+			]
+		}
 	} )
 	.then( editor => {
 		window.editor = editor;
@@ -73,10 +86,12 @@ ClassicEditor
 			console.log( '----- paste -----' );
 			console.log( data );
 			console.log( 'text/html\n', data.dataTransfer.getData( 'text/html' ) );
+			console.log( 'text/rtf\n', data.dataTransfer.getData( 'text/rtf' ) );
 			console.log( 'text/plain\n', data.dataTransfer.getData( 'text/plain' ) );
 
 			htmlDiv.innerText = data.dataTransfer.getData( 'text/html' );
 			textDiv.innerText = data.dataTransfer.getData( 'text/plain' );
+			rtfDiv.innerText = data.dataTransfer.getData( 'text/rtf' );
 		} );
 
 		clipboard.on( 'inputTransformation', ( evt, data ) => {

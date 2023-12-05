@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2023, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -140,9 +140,8 @@ describe( 'ImageUploadUI', () => {
 		const id = fileRepository.getLoader( files[ 0 ] ).id;
 
 		expect( getModelData( model ) ).to.equal(
-			'<paragraph>' +
-				`f[<imageInline uploadId="${ id }" uploadStatus="reading"></imageInline>]oo` +
-			'</paragraph>'
+			`[<imageBlock uploadId="${ id }" uploadStatus="reading"></imageBlock>]` +
+			'<paragraph>foo</paragraph>'
 		);
 	} );
 
@@ -158,10 +157,9 @@ describe( 'ImageUploadUI', () => {
 		const id2 = fileRepository.getLoader( files[ 1 ] ).id;
 
 		expect( getModelData( model ) ).to.equal(
-			'<paragraph>' +
-				`foo<imageInline uploadId="${ id1 }" uploadStatus="reading"></imageInline>` +
-				`[<imageInline uploadId="${ id2 }" uploadStatus="reading"></imageInline>]` +
-			'</paragraph>' +
+			'<paragraph>foo</paragraph>' +
+			`<imageBlock uploadId="${ id1 }" uploadStatus="reading"></imageBlock>` +
+			`[<imageBlock uploadId="${ id2 }" uploadStatus="reading"></imageBlock>]` +
 			'<paragraph>bar</paragraph>'
 		);
 	} );

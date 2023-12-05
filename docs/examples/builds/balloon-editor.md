@@ -1,5 +1,6 @@
 ---
 category: examples-builds
+meta-title: Balloon editor build example | CKEditor 5 Documentation
 order: 30
 toc: false
 classes: main__content--no-toc
@@ -20,10 +21,19 @@ Check out the {@link installation/getting-started/predefined-builds#installation
 
 ```js
 
-import BaloonEditor from '@ckeditor/ckeditor5-build-baloon/src/ckeditor';
+import BalloonEditor from '@ckeditor/ckeditor5-build-balloon';
 
 BalloonEditor
 	.create( document.querySelector( '#snippet-balloon-editor' ), {
+		toolbar: {
+			items: [
+				'undo', 'redo',
+				'|', 'heading',
+				'|', 'bold', 'italic',
+				'|', 'link', 'uploadImage', 'insertTable', 'mediaEmbed',
+				'|', 'bulletedList', 'numberedList', 'outdent', 'indent'
+			]
+		},
 		cloudServices: {
 			// All predefined builds include the Easy Image feature.
 			// Provide correct configuration values to use it.
