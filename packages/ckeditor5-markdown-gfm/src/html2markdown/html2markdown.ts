@@ -16,6 +16,7 @@ import TurndownService from 'turndown';
 // There no avaialble types for 'turndown-plugin-gfm' module and it's not worth to generate them on our own.
 // @ts-ignore
 import { gfm } from 'turndown-plugin-gfm';
+import mojoTurndownBlankReplacementFn from './mojo-turndown-blank-replacement';
 
 // Override the original escape method by not escaping links.
 const originalEscape = TurndownService.prototype.escape;
@@ -62,7 +63,8 @@ TurndownService.prototype.escape = function( string: string ): string {
 const turndownService = new TurndownService( {
 	codeBlockStyle: 'fenced',
 	hr: '---',
-	headingStyle: 'atx'
+	headingStyle: 'atx',
+	blankReplacement: mojoTurndownBlankReplacementFn
 } );
 
 turndownService.use( [
